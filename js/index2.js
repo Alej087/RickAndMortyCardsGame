@@ -58,16 +58,27 @@ window.addEventListener("load", async (e) => {
     }
 
     const characters = await getCharacters();
-    const charactersCardsInfo = [];
-    for (let i = 0; i < characters.length; i++) {
-        charactersCardsInfo.push({
-            name: characters[i].name,
-            gender: characters[i].gender,
-            specie: characters[i].species,
-            urlImage: characters[i].image,
-        });
-    }
-    console.log(charactersCardsInfo);
+    const charactersInfo = characters.map(
+        ({ name, gender, species, image }) => ({
+            name,
+            gender,
+            species,
+            image,
+        })
+    );
+
+    console.log("Hola ---", charactersInfo);
+
+    // const charactersCardsInfo = [];
+    // for (let i = 0; i < characters.length; i++) {
+    //     charactersCardsInfo.push({
+    //         name: characters[i].name,
+    //         gender: characters[i].gender,
+    //         specie: characters[i].species,
+    //         urlImage: characters[i].image,
+    //     });
+    // }
+    // console.log(charactersCardsInfo);
 
     function shuffle(characters) {
         let currentIndex = characters.length,
@@ -83,28 +94,43 @@ window.addEventListener("load", async (e) => {
         return characters;
     }
 
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+    }
+
+    function generateRamdonIndexes(params) {
+        const indexes = [];
+        for (let i = 0; i < 4; i++) {
+            indexes.push(getRandomInt(charactersInfo.length));
+        }
+        return indexes;
+    }
+
     function generateCards(quantityCards) {
+        const indexes = generateRamdonIndexes();
+
+        indexes.forEach((index) => {
+            console.log(charactersInfo[index]);
+        });
+
         const panel = document.querySelector(".table");
-        shuffle(charactersCardsInfo);
+        shuffle(charactersInfo);
         if (panel.hasChildNodes() || !panel.hasChildNodes()) {
             panel.innerHTML = "";
             for (let i = 0; i < quantityCards / 2; i++) {
                 for (let j = 0; j < 2; j++) {
                     let card = document.createElement("div");
                     let cardImage = document.createElement("img");
-                    cardImage.setAttribute(
-                        "src",
-                        charactersCardsInfo[j].urlImage
-                    );
+                    cardImage.setAttribute("src", charactersInfo[j].image);
                     card.appendChild(cardImage);
                     card.classList.add("table-cards");
                     let cardTittle = document.createElement("h3");
                     let tittle = document.createElement("p");
                     let infoTittle = document.createTextNode(
-                        charactersCardsInfo[j].name
+                        charactersInfo[j].name
                     );
                     let info = document.createTextNode(
-                        `${charactersCardsInfo[j].gender} - ${charactersCardsInfo[j].specie}`
+                        `${charactersInfo[j].gender} - ${charactersInfo[j].species}`
                     );
                     tittle.appendChild(infoTittle);
                     card.appendChild(tittle);
